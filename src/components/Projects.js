@@ -4,25 +4,25 @@ import './Projects.css';
 export default function Projects() {
   const projectList = [
     {
-      title: "Advanced Group Testing for Community Infection Control",
-      duration: "June 2024 – June 2025",
-      tech: "Python, Graph Theory, Simulation",
-      description: "Simulated infection spread using Erdős–Rényi, Barabási–Albert, and Watts–Strogatz graph models. Implemented Naive, Dorfman, Two-Stage Adaptive, and GCAGT testing strategies. Evaluated test count, accuracy, and error rates across infection scenarios."
+        title: "Advanced Group Testing for Community Infection Control",
+        duration: "June 2024 – June 2025",
+        tech: "Python, Graph Theory, Simulation",
+        description: "Simulated infection spread using Erdős–Rényi, Barabási–Albert, and Watts–Strogatz graph models. Implemented Naive, Dorfman, Two-Stage Adaptive, and GCAGT testing strategies. Evaluated test count, accuracy, and error rates across infection scenarios."
     },
     {
-      title: "Face Detection-Based Attendance System",
-      tech: "Python, OpenCV, Flask",
-      description: "Built a camera-based attendance app with over 95% face recognition accuracy using OpenCV. Integrated backend with Flask for real-time logging."
+        title: "Face Detection-Based Attendance System",
+        tech: "Python, OpenCV, Flask",
+        description: "Built a camera-based attendance app with over 95% face recognition accuracy using OpenCV. Integrated backend with Flask for real-time logging."
     },
     {
-      title: "Fruit Recognition System",
-      tech: "Python, TensorFlow",
-      description: "Trained a CNN model to classify 22 fruit categories. Preprocessed 2200+ images and achieved 98% accuracy. Visualized predictions using Matplotlib."
+        title: "Fruit Recognition System",
+        tech: "Python, TensorFlow",
+        description: "Trained a CNN model to classify 22 fruit categories. Preprocessed 2200+ images and achieved 98% accuracy. Visualized predictions using Matplotlib."
     },
     {
-      title: "Interactive Cybersecurity Chatbot",
-      tech: "Java",
-      description: "Developed a Java-based chatbot to simulate cyber threat scenarios using predefined JSON prompts. Aimed to enhance phishing awareness through interactive Q&A."
+        title: "Interactive Cybersecurity Chatbot",
+        tech: "Java",
+        description: "Developed a Java-based chatbot to simulate cyber threat scenarios using predefined JSON prompts. Aimed to enhance phishing awareness through interactive Q&A."
     },
     {
         title: "Dumb Charades Game",

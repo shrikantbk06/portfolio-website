@@ -1,6 +1,6 @@
 import React from 'react';
 import './About.css';
-import profileImage from '../assets/profile.png'; // update filename as needed
+import profileImage from '../assets/profile.png';
 
 export default function About() {
   return (
