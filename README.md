@@ -21,4 +21,3 @@ It showcases my skills, background, and projects, with links to my resume and Gi
 - React
 - HTML, CSS
 - React Router
-- GitHub Pages or Netlify for deployment
