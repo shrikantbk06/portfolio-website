@@ -23,11 +23,11 @@ export default function About() {
           <div className="skills-list">
             <h3>Tech Stack</h3>
             <ul>
-              <li>💻 JavaScript / React / Node.js</li>
-              <li>🐍 Python</li>
-              <li>☁️ AWS & Deployment</li>
-              <li>🧪 Software Testing / DevOps</li>
-              <li>📦 Git / GitHub / CI-CD</li>
+              <li><b>Programming Languages:</b> Java, Python, JavaScript, SQL, C, C++, C#, HTML, CSS</li>
+              <li><b>Frameworks & Libraries:</b> Spring Boot, React, Node.js</li>
+              <li><b>Cloud & DevOps:</b> AWS, Docker, CI/CD</li>
+              <li><b>Tools:</b> Git, JUnit, Mockito</li>
+              <li><b>Databases:</b> MySQL, PostgreSQL, DynamoDB</li>
             </ul>
           </div>
         </div>

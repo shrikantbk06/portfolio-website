@@ -23,7 +23,13 @@ export default function Home() {
           I'm a Master's graduate from the University of Sydney with hands-on experience in building scalable web applications, cloud-based microservices, and intelligent systems using React, Node.js, Java, and Python. Passionate about crafting efficient, secure, and user-centric solutions.
         </p>
         <Link to="/projects" className="hero-btn">My Projects</Link>
-        <a href="/Shrikant_Resume.pdf" download className="hero-btn resume-btn">Download Resume</a>
+        <a
+            href={`${process.env.PUBLIC_URL}/Shrikant_Resume.pdf`}
+            download
+            className="hero-btn resume-btn"
+        >
+            Download Resume
+        </a>
       </div>
     </div>
   );
