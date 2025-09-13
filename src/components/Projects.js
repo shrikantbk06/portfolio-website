@@ -1,61 +1,186 @@
-import React from 'react';
+// src/components/Projects.js
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import './Projects.css';
 
 export default function Projects() {
-  const projectList = [
-    {
-        title: "Advanced Group Testing for Community Infection Control",
-        duration: "June 2024 – June 2025",
-        tech: "Python, Graph Theory, Simulation",
-        description: "Simulated infection spread using Erdős–Rényi, Barabási–Albert, and Watts–Strogatz graph models. Implemented Naive, Dorfman, Two-Stage Adaptive, and GCAGT testing strategies. Evaluated test count, accuracy, and error rates across infection scenarios."
-    },
-    {
-        title: "Face Detection-Based Attendance System",
-        tech: "Python, OpenCV, Flask",
-        description: "Built a camera-based attendance app with over 95% face recognition accuracy using OpenCV. Integrated backend with Flask for real-time logging."
-    },
-    {
-        title: "Fruit Recognition System",
-        tech: "Python, TensorFlow",
-        description: "Trained a CNN model to classify 22 fruit categories. Preprocessed 2200+ images and achieved 98% accuracy. Visualized predictions using Matplotlib."
-    },
-    {
-        title: "Interactive Cybersecurity Chatbot",
-        tech: "Java",
-        description: "Developed a Java-based chatbot to simulate cyber threat scenarios using predefined JSON prompts. Aimed to enhance phishing awareness through interactive Q&A."
-    },
-    {
-        title: "Dumb Charades Game",
-        tech: "React, HTML, CSS",
-        description: "A web-based timer and scorekeeper for Dumb Charades. Built with React and deployed using GitHub Pages. Designed for fun, quick game nights with friends.",
-        githubLink: "https://github.com/shrikantbk06/dumb-charades"
-    },
+  const [projectList, setProjectList] = useState([]);
+  const [active, setActive] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [err, setErr] = useState('');
 
-  ];
+  // Load from public/projects.json
+  useEffect(() => {
+    const url = `${process.env.PUBLIC_URL}/projects.json?v=1`; // bump ?v=2 when you change JSON
+    fetch(url)
+      .then((r) => {
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        return r.json();
+      })
+      .then((data) => setProjectList(Array.isArray(data) ? data : []))
+      .catch((e) => setErr(`Failed to load projects.json (${e.message})`))
+      .finally(() => setLoading(false));
+  }, []);
+
+  // Close on ESC
+  useEffect(() => {
+    const onKey = (e) => e.key === 'Escape' && setActive(null);
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
+
+  // Lock background scroll while modal is open
+  useEffect(() => {
+    if (active) {
+      const prev = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = prev;
+      };
+    }
+  }, [active]);
+
+  const getThumbUrl = (filename) =>
+    filename ? `${process.env.PUBLIC_URL}/project-thumbs/${filename}` : null;
+
+  const placeholder =
+    'data:image/svg+xml;utf8,' +
+    encodeURIComponent(
+      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360">
+        <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#6fd3ff"/><stop offset="1" stop-color="#22c55e"/>
+        </linearGradient></defs>
+        <rect width="640" height="360" fill="url(#g)"/>
+      </svg>`
+    );
 
   return (
     <div className="projects-container">
       <h2>Projects</h2>
+
+      {loading && <p className="project-tech">Loading projects…</p>}
+      {err && !loading && (
+        <p className="project-tech" style={{ color: '#f87171' }}>
+          {err}
+        </p>
+      )}
+
       <div className="projects-grid">
-        {projectList.map((proj, index) => (
-          <div className="project-card" key={index}>
-            <h3>{proj.title}</h3>
-            {proj.duration && <p className="project-duration">{proj.duration}</p>}
-            <p className="project-tech"><strong>Tech:</strong> {proj.tech}</p>
-            <p>{proj.description}</p>
-                {(proj.demoLink || proj.githubLink) && (
-                    <div className="project-links">
-                        {proj.demoLink && (
-                            <a href={proj.demoLink} target="_blank" rel="noreferrer">🔗 Live Demo</a>
-                        )}
-                        {proj.githubLink && (
-                            <a href={proj.githubLink} target="_blank" rel="noreferrer">💻 GitHub</a>
-                        )}
-                    </div>
+        {!loading &&
+          !err &&
+          projectList.map((proj) => {
+            const thumb = getThumbUrl(proj.image) || placeholder;
+
+            return (
+              <motion.div
+                key={proj.id || proj.title}
+                className="project-card"
+                whileHover={{ y: -4 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => setActive(proj)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) =>
+                  (e.key === 'Enter' || e.key === ' ') && setActive(proj)
+                }
+                aria-label={`Open details for ${proj.title}`}
+              >
+                <div className="project-thumb-wrapper">
+                  <img
+                    className="project-thumb"
+                    src={thumb}
+                    alt={`${proj.title} thumbnail`}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
+
+                <h3 className="project-title-only">{proj.title}</h3>
+                {proj.duration && (
+                  <p className="project-duration">{proj.duration}</p>
                 )}
-          </div>
-        ))}
+                <div className="project-cta">Click to view details</div>
+              </motion.div>
+            );
+          })}
       </div>
+
+      <AnimatePresence>
+        {active && (
+          <>
+            <motion.div
+              className="modal-backdrop"
+              onClick={() => setActive(null)}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            />
+            <motion.div
+              className="modal-wrapper"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.98 }}
+              transition={{ type: 'spring', stiffness: 280, damping: 24 }}
+            >
+              <div
+                className="modal-card"
+                role="dialog"
+                aria-modal="true"
+                aria-label="Project details"
+              >
+                <header className="modal-header">
+                  <h3>{active.title}</h3>
+                  <button
+                    className="close-btn"
+                    onClick={() => setActive(null)}
+                    aria-label="Close"
+                  >
+                    ✕
+                  </button>
+                </header>
+
+                {/* Scrollable body so long descriptions don't push the header */}
+                <div className="modal-body">
+                  {active.duration && (
+                    <p className="project-duration">{active.duration}</p>
+                  )}
+                  {active.tech && (
+                    <p className="project-tech">
+                      <strong>Tech:</strong> {active.tech}
+                    </p>
+                  )}
+
+                  <div className="modal-desc">
+                    {active.description
+                      .split('\n\n')
+                      .map((para, i) => (
+                        <p key={i}>
+                          {para.split('\n').map((line, j, arr) => (
+                            <React.Fragment key={j}>
+                              {line}
+                              {j < arr.length - 1 && <br />}
+                            </React.Fragment>
+                          ))}
+                        </p>
+                      ))}
+                  </div>
+
+                  {active.githubLink && (
+                    <a
+                      href={active.githubLink}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="btn secondary"
+                    >
+                      💻 GitHub
+                    </a>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

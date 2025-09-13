@@ -3,12 +3,34 @@ import './About.css';
 import profileImage from '../assets/profile.png';
 
 export default function About() {
+  const getPublicImagePath = (fileName) => {
+    if (process.env.NODE_ENV !== 'production') {
+      return `/${fileName}`; // dev server
+    }
+    // production: GitHub Pages project site → /portfolio-website/...
+    return `${process.env.PUBLIC_URL}/${fileName}`;
+  };
+  const profilePublic = getPublicImagePath('profile.png');
+
+  const handleImgError = (e) => {
+    if (e.target.src !== profilePublic) {
+      e.target.src = profilePublic;
+      e.currentTarget.dataset.fallback = 'true';
+    }
+  };
   return (
     <div className="about-container">
       <h2>About Me</h2>
       <div className="about-flex">
         <div className="about-image">
-          <img src={profileImage} alt="Profile" />
+          <img src={profileImage} 
+            alt="Profile" 
+            width="240"
+            height="240"
+            decoding="async"
+            loading="eager"
+            onError={handleImgError}
+            style={{ backgroundColor: 'transparent', display: 'block' }}/>
         </div>
         <div className="about-content">
           <p>
