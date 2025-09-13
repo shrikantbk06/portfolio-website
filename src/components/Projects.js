@@ -1,6 +1,8 @@
 // src/components/Projects.js
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { FaGithub } from "react-icons/fa";
+import { FiExternalLink } from "react-icons/fi"; 
 import './Projects.css';
 
 export default function Projects() {
@@ -11,7 +13,7 @@ export default function Projects() {
 
   // Load from public/projects.json
   useEffect(() => {
-    const url = `${process.env.PUBLIC_URL}/projects.json?v=1`; // bump ?v=2 when you change JSON
+    const url = `${process.env.PUBLIC_URL}/projects.json?v=1`; 
     fetch(url)
       .then((r) => {
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
@@ -99,7 +101,24 @@ export default function Projects() {
                 {proj.duration && (
                   <p className="project-duration">{proj.duration}</p>
                 )}
-                <div className="project-cta">Click to view details</div>
+
+                {/* Show quick links if available */}
+                {(proj.demoLink || proj.githubLink) && (
+                  <div className="project-links">
+                    {proj.githubLink && (
+                      <a href={proj.githubLink} target="_blank" rel="noreferrer" aria-label="GitHub Repo">
+                        <FaGithub size={20} />
+                      </a>
+                    )}
+                    {proj.demoLink && (
+                      <a href={proj.demoLink} target="_blank" rel="noreferrer" aria-label="Live Demo">
+                        <FiExternalLink size={20} />
+                      </a>
+                    )}                    
+                  </div>
+                )}
+
+                {/* <div className="project-cta">Click to view details</div> */}
               </motion.div>
             );
           })}
@@ -165,16 +184,29 @@ export default function Projects() {
                       ))}
                   </div>
 
-                  {active.githubLink && (
-                    <a
-                      href={active.githubLink}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="btn secondary"
-                    >
-                      💻 GitHub
-                    </a>
-                  )}
+                  <div className="modal-links">
+                    {active.githubLink && (
+                      <a
+                        href={active.githubLink}
+                        target="_blank"
+                        rel="noreferrer"
+                        aria-label="GitHub Repo"
+                      >
+                        <FaGithub size={22} />
+                      </a>
+                    )}
+                    {active.demoLink && (
+                      <a
+                        href={active.demoLink}
+                        target="_blank"
+                        rel="noreferrer"
+                        aria-label="Live Demo"
+                      >
+                        <FiExternalLink size={22} />
+                      </a>
+                    )}
+                    
+                  </div>
                 </div>
               </div>
             </motion.div>
